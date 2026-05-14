@@ -3,7 +3,7 @@ BUILDDIR := build
 PDF    := $(BUILDDIR)/$(MAIN).pdf
 
 LATEXMK := latexmk
-LATEXMK_FLAGS := -pdf -bibtex -interaction=nonstopmode -outdir=$(BUILDDIR)
+LATEXMK_FLAGS := -lualatex -bibtex -interaction=nonstopmode -outdir=$(BUILDDIR) -shell-escape
 
 .PHONY: all clean
 

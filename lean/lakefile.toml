@@ -1,0 +1,11 @@
+name = "AlphaProof"
+version = "0.1.0"
+defaultTargets = ["AlphaProof"]
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "stable"
+
+[[lean_lib]]
+name = "AlphaProof"

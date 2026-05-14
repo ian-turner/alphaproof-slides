@@ -2,6 +2,11 @@
 
 \usepackage{amsmath, amssymb}
 \usepackage{natbib}
+\usepackage{bussproofs}
+\usepackage{fontspec}
+\setmonofont{JuliaMono}
+\usepackage[outputdir=build]{minted}
+\setminted{fontsize=\footnotesize}
 
 \title{AlphaProof}
 \subtitle{Olympiad-Level Formal Mathematical Reasoning with Reinforcement Learning}
@@ -60,6 +65,69 @@
     \]
     which is divisible by 2, hence even. \qed
   \end{block}
+\end{frame}
+
+\begin{frame}{Machine Formalization}
+  Lean is built on the \textbf{Calculus of Constructions}: a dependent type theory where
+  \textbf{propositions are types} and \textbf{proofs are terms} (Curry--Howard).
+  \vspace{0.5em}
+  \begin{columns}
+    \column{0.48\textwidth}
+    \begin{block}{Informal statement}
+      ``$n^2$ is even whenever $n$ is even''
+    \end{block}
+    \begin{block}{Lean type}
+      \small\ttfamily
+      $\forall\, n : \mathbb{Z},\; 2 \mid n \to 2 \mid n^2$
+    \end{block}
+    \column{0.48\textwidth}
+    \begin{block}{Dependent types}
+      Types may depend on \emph{values}: $\Pi\, x{:}\alpha,\; \beta\, x$.
+      This lets Lean encode rich invariants (e.g.\ \texttt{vec\,$\alpha$\,$n$}: a list of \emph{exactly} $n$ elements).
+    \end{block}
+  \end{columns}
+  \vspace{0.5em}
+  To prove a proposition $P$, construct a term of type $P$.
+\end{frame}
+
+\begin{frame}[fragile]{Proof Tree: $2 \mid n \;\Rightarrow\; 2 \mid n^2$}
+  \begin{columns}
+    \column{0.5\textwidth}
+    \begin{prooftree}
+      \AxiomC{$[2 \mid n]^{1}$}
+      \UnaryInfC{$\exists\, k \in \mathbb{Z},\; n = 2k$}
+      \UnaryInfC{$n^2 = (2k)^2 = 2 \cdot (2k^2)$}
+      \UnaryInfC{$\exists\, m \in \mathbb{Z},\; n^2 = 2m$}
+      \UnaryInfC{$2 \mid n^2$}
+      \RightLabel{${\to}$I$^{1}$}
+      \UnaryInfC{$2 \mid n \;\to\; 2 \mid n^2$}
+    \end{prooftree}
+
+    \column{0.45\textwidth}
+    \small
+    \begin{itemize}
+      \item[{$[\ ]^1$}] Temporary \textbf{assumption}, discharged at the end.
+      \item[{$\exists$E}] Unpack the definition of divisibility: $2\mid n$ means $n=2k$ for some $k$.
+      \item[{calc}] Pure arithmetic --- no logic rules, just algebra.
+      \item[{$\exists$I}] Re-pack: exhibiting $m = 2k^2$ witnesses $2 \mid n^2$.
+      \item[{${\to}$I$^1$}] \textbf{Discharge} assumption 1, having derived $2\mid n^2$
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Lean 4: $2 \mid n \;\Rightarrow\; 2 \mid n^2$}
+\begin{minted}{lean4}
+theorem even_sq (n : Int) (h : 2 ∣ n) : 2 ∣ n ^ 2 := by
+  obtain ⟨k, hk⟩ := h
+  exact ⟨2 * k ^ 2, by rw [hk]; ring⟩
+\end{minted}
+\vspace{0.5em}
+\begin{itemize}
+  \small
+  \item \texttt{obtain ⟨k, hk⟩ := h} --- unpacks the hypothesis $h : 2 \mid n$ into a witness $k$ and a proof \texttt{hk} that $n = 2k$ \hfill($\exists$E)
+  \item \texttt{exact ⟨2 * k\^{}2, \ldots⟩} --- provides the witness $m = 2k^2$; the goal reduces to $2(2k^2) = (2k)^2$, discharged by \texttt{ring} \hfill($\exists$I + calc)
+  \item \texttt{ring} --- automatically proves equalities in commutative rings by polynomial normalisation; no manual algebra needed
+\end{itemize}
 \end{frame}
 
 \section{Methods}
