@@ -32,6 +32,7 @@
 		\begin{enumerate}
 			\item Theorem Proving
 			\item Machine Formalization
+            \item Example Proof Tree
 		\end{enumerate}
 	\item Methods
 		\begin{enumerate}
@@ -115,7 +116,25 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Lean 4: $2 \mid n \;\Rightarrow\; 2 \mid n^2$}
+\begin{frame}[fragile]{Lean 4: Calc Proof}
+\begin{minted}{lean4}
+theorem even_sq_calc (n : Int) (h : 2 ∣ n) : 2 ∣ n ^ 2 :=
+  let ⟨k, hk⟩ := h
+  ⟨2 * k ^ 2, calc
+    n ^ 2 = (2 * k) ^ 2       := by rw [hk]
+        _ = 2 * k * (2 * k)   := by rw [sq]
+        _ = 2 * (k * (2 * k)) := by rw [mul_assoc]
+        _ = 2 * (2 * (k * k)) := by rw [mul_left_comm k 2 k]
+        _ = 2 * (2 * k ^ 2)   := by rw [← sq k]⟩
+\end{minted}
+\vspace{0.5em}
+\begin{itemize}
+  \small
+  \item Each step applies a single algebraic law: \texttt{sq}, \texttt{mul\_assoc}, \texttt{mul\_left\_comm}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Lean 4: Tactic Proof}
 \begin{minted}{lean4}
 theorem even_sq (n : Int) (h : 2 ∣ n) : 2 ∣ n ^ 2 := by
   obtain ⟨k, hk⟩ := h
@@ -124,9 +143,9 @@ theorem even_sq (n : Int) (h : 2 ∣ n) : 2 ∣ n ^ 2 := by
 \vspace{0.5em}
 \begin{itemize}
   \small
-  \item \texttt{obtain ⟨k, hk⟩ := h} --- unpacks the hypothesis $h : 2 \mid n$ into a witness $k$ and a proof \texttt{hk} that $n = 2k$ \hfill($\exists$E)
-  \item \texttt{exact ⟨2 * k\^{}2, \ldots⟩} --- provides the witness $m = 2k^2$; the goal reduces to $2(2k^2) = (2k)^2$, discharged by \texttt{ring} \hfill($\exists$I + calc)
-  \item \texttt{ring} --- automatically proves equalities in commutative rings by polynomial normalisation; no manual algebra needed
+  \item \texttt{obtain ⟨k, hk⟩ := h} --- unpacks $h : 2 \mid n$ into witness $k$ and proof \texttt{hk : n = 2*k} \hfill($\exists$E)
+  \item \texttt{exact ⟨2 * k\^{}2, \ldots⟩} --- provides witness $m = 2k^2$; arithmetic discharged by \texttt{ring} \hfill($\exists$I + calc)
+  \item \texttt{ring} --- proves ring equalities automatically by polynomial normalisation
 \end{itemize}
 \end{frame}
 
