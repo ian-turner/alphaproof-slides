@@ -1,6 +1,4 @@
-\documentclass[aspectratio=169]{beamer}
-
-\usetheme{Madrid}
+\documentclass{beamer}
 
 \usepackage{amsmath, amssymb}
 \usepackage{natbib}
@@ -11,13 +9,57 @@
 \institute{}
 \date{\today}
 
+\AtBeginSection[]{
+  \begin{frame}
+    \sectionpage
+  \end{frame}
+}
+
 \begin{document}
 
 \begin{frame}
   \titlepage
 \end{frame}
 
-\begin{frame}[allowframebreaks]{References}
+\begin{frame}{Outline}
+  \begin{enumerate}
+    \item Background
+		\begin{enumerate}
+			\item Theorem Proving
+			\item Machine Formalization
+		\end{enumerate}
+	\item Methods
+		\begin{enumerate}
+			\item Lean Environment
+			\item Prover Agent
+			\item Training
+			\item Inference
+		\end{enumerate}
+	\item Benchmarking
+		\begin{enumerate}
+			\item Datasets
+			\item Data Separation
+			\item Results
+		\end{enumerate}
+	\item Conclusion
+  \end{enumerate}
+\end{frame}
+
+\section{Background}
+
+\section{Methods}
+
+\section{Benchmarking}
+
+\section{Conclusion}
+
+\begin{frame}[allowframebreaks]{Conclusion}
+test
+\end{frame}
+
+\end{frame}
+
+\begin{frame}{References}
   \nocite{*}
   \bibliographystyle{plainnat}
   \bibliography{refs}
