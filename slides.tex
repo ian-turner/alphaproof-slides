@@ -209,12 +209,45 @@ existing in Mathlib
 
 \section{Benchmarking}
 
+\begin{frame}{Datasets}
+\begin{itemize}
+\item formal-imo: 258 international math olympiad problems formalized by experts
+\item miniF2F: 244 math problems from a variety of math olympiads and undergraduate courses
+\item PutnamBench: 672 problems from William Lowell Putnam Mathematical Competition (1962-2025)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Data Separation}
+\begin{itemize}
+\item In order to avoid contaminating the training data with answers to benchmark goals,
+      all Lean code is explicitly filtered out before it reaches the neural network
+\item Only Mathlib problems are used during fine-tuning, preventing any other formalized
+      solutions from leaking into the data
+\item Another process is run during the RL training loop to automatically screen out
+      synthetically-generated problems which are too similar to the benchmark problems
+\item This does not proclude natural-language descriptions of solutions from leaking
+      into the training data, meaning that the models may still get unfair ``hints''
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Results}
+Performance on auto-formalization of benchmark tasks
+\\
+
+\includegraphics[width=\textwidth]{{ ./images/table1 }}
+
+\hfill
+
+Performance on benchmark proof tasks
+\\
+
+\includegraphics[width=\textwidth]{{ ./images/table2 }}
+\end{frame}
+
 \section{Conclusion}
 
 \begin{frame}{Conclusion}
 ~
-\end{frame}
-
 \end{frame}
 
 \begin{frame}{References}
