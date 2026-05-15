@@ -118,7 +118,7 @@
 
 \begin{frame}[fragile]{Lean 4: Calc Proof}
 \begin{minted}{lean4}
-theorem even_sq_calc (n : Int) (h : 2 ∣ n) : 2 ∣ n ^ 2 :=
+theorem even_sq (n : Int) (h : 2 ∣ n) : 2 ∣ n ^ 2 :=
   let ⟨k, hk⟩ := h
   ⟨2 * k ^ 2, calc
     n ^ 2 = (2 * k) ^ 2       := by rw [hk]
@@ -152,19 +152,49 @@ theorem even_sq (n : Int) (h : 2 ∣ n) : 2 ∣ n ^ 2 := by
 \section{Methods}
 
 \begin{frame}{Lean Environment}
-~
+\begin{itemize}
+\item The proving process is modelled as a sequential decision making problem
+\item The ``state'' is the current logical state of the proof
+\item The agent acts by proposing Lean tactics directly using text strings
+\item Each tactic applied yields a -1 reward, and in situations where
+multiple goals branch off simultaneously the minimal reward is chosen
+\item Each RL episode ends either when a proof is found or timeout occurs
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Prover Agent}
-~
+\begin{itemize}
+\item 3-billion parameter transformer encoder-decoder
+\item Input: Lean tactic state
+\item Output: Policy of suggested tactics, value function of expected return
+\item Tree search similar to AlphaZero is used to explore possible proof tactics
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Training}
-~
+\begin{itemize}
+\item Multi-stage training process
+\item Stage 1: pre-training on billions of tokens of math texts and code
+\item Stage 2: fine-tuning on hundreds of thousands of proofs already
+existing in Mathlib
+\item Stage 3: self-generated experience; 1 million informal math problems
+      from human-written text are formalized into Lean, and similar problems
+      are synthetically generated, yielding 80 million total problems
+\item Continuous improvement is shown throughout all stages, demonstrating that
+      the agent is able to learn far beyond what would be possible with
+      a manually curated set of training data
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Inference}
-~
+\begin{itemize}
+\item Tree search budget is scaled up during inference
+\item When search alone is not enough, the system generates
+      novel problem variants, through techniques such as
+      simplification or generalization, and trains on those
+      in real time
+\item This is known as test-time reinforcement learning (TTRL)
+\end{itemize}
 \end{frame}
 
 \section{Benchmarking}
