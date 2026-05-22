@@ -4,8 +4,8 @@
 \usepackage{natbib}
 \usepackage{bussproofs}
 \usepackage{fontspec}
-\setmonofont{JuliaMono}
-\usepackage[outputdir=build]{minted}
+\IfFontExistsTF{JuliaMono}{\setmonofont{JuliaMono}}{}
+\usepackage{minted}
 \setminted{fontsize=\footnotesize}
 
 \title{AlphaProof}
@@ -116,7 +116,7 @@
 \end{frame}
 
 \begin{frame}[fragile]{Lean 4: Calc Proof}
-\begin{minted}{lean4}
+\begin{minted}{lean}
 theorem even_sq (n : Int) (h : 2 ∣ n) : 2 ∣ n ^ 2 :=
   let ⟨k, hk⟩ := h
   ⟨2 * k ^ 2, calc
@@ -134,7 +134,7 @@ theorem even_sq (n : Int) (h : 2 ∣ n) : 2 ∣ n ^ 2 :=
 \end{frame}
 
 \begin{frame}[fragile]{Lean 4: Tactic Proof}
-\begin{minted}{lean4}
+\begin{minted}{lean}
 theorem even_sq (n : Int) (h : 2 ∣ n) : 2 ∣ n ^ 2 := by
   obtain ⟨k, hk⟩ := h
   exact ⟨2 * k ^ 2, by rw [hk]; ring⟩
